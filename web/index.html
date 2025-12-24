@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Omok-Lab: AI-Powered Gomoku Analysis Tool with Renju Rules">
+    <meta name="keywords" content="omok, gomoku, renju, AI, game, strategy">
+    <title>⚫ Omok-Lab | AI-Powered Gomoku Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">⚫</span>
+                    <h1>Omok-Lab</h1>
+                </div>
+                <p class="tagline">AI-Powered Gomoku Analysis Tool</p>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="main-content">
+            <!-- Left Sidebar - Game Info -->
+            <aside class="sidebar sidebar-left">
+                <div class="panel">
+                    <h2 class="panel-title">Game Status</h2>
+                    <div class="game-info">
+                        <div class="info-item">
+                            <span class="info-label">Current Player</span>
+                            <div class="current-player">
+                                <span class="stone-indicator black" id="currentPlayerStone"></span>
+                                <span id="currentPlayerText">Black</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Move Number</span>
+                            <span class="info-value" id="moveNumber">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Game Mode</span>
+                            <span class="info-value" id="gameMode">Player vs AI</span>
+                        </div>
+                    </div>
+
+                    <div class="game-status" id="gameStatus">
+                        <div class="status-message">Ready to play!</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="panel-title">Controls</h2>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="newGameBtn">
+                            <span>🎮</span> New Game
+                        </button>
+                        <button class="btn btn-secondary" id="undoBtn">
+                            <span>↶</span> Undo Move
+                        </button>
+                        <button class="btn btn-secondary" id="hintBtn">
+                            <span>💡</span> Get Hint
+                        </button>
+                        <button class="btn btn-secondary" id="aiMoveBtn">
+                            <span>🤖</span> AI Move
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="panel-title">Settings</h2>
+                    <div class="settings">
+                        <div class="setting-item">
+                            <label for="aiDifficulty">AI Difficulty</label>
+                            <select id="aiDifficulty" class="select-input">
+                                <option value="1">Easy (Depth 1)</option>
+                                <option value="2">Medium (Depth 2)</option>
+                                <option value="3" selected>Hard (Depth 3)</option>
+                                <option value="4">Expert (Depth 4)</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="showForbidden" checked>
+                                <span>Show Forbidden Moves</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="showCoordinates" checked>
+                                <span>Show Coordinates</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Game Board -->
+            <section class="board-container">
+                <div class="board-wrapper">
+                    <canvas id="gameBoard" width="750" height="750"></canvas>
+                    <div class="board-overlay" id="boardOverlay"></div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar - Move History & Analysis -->
+            <aside class="sidebar sidebar-right">
+                <div class="panel">
+                    <h2 class="panel-title">Move History</h2>
+                    <div class="move-history" id="moveHistory">
+                        <div class="empty-state">No moves yet</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="panel-title">AI Analysis</h2>
+                    <div class="ai-analysis">
+                        <div class="analysis-item">
+                            <span class="analysis-label">Position Score</span>
+                            <span class="analysis-value" id="positionScore">0</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-label">Nodes Evaluated</span>
+                            <span class="analysis-value" id="nodesEvaluated">0</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-label">Calculation Time</span>
+                            <span class="analysis-value" id="calcTime">0ms</span>
+                        </div>
+                        <div class="suggested-move" id="suggestedMove">
+                            <div class="empty-state">Click "Get Hint" for AI suggestion</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="panel-title">Renju Rules</h2>
+                    <div class="rules-info">
+                        <div class="rule-item">
+                            <span class="rule-icon">🚫</span>
+                            <div class="rule-text">
+                                <strong>3-3 Forbidden</strong>
+                                <p>Black cannot create two open threes</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-icon">🚫</span>
+                            <div class="rule-text">
+                                <strong>4-4 Forbidden</strong>
+                                <p>Black cannot create two open fours</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-icon">🚫</span>
+                            <div class="rule-text">
+                                <strong>Overline</strong>
+                                <p>Black cannot make 6+ in a row</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 Omok-Lab | Built with ❤️ for Gomoku enthusiasts</p>
+            <p class="footer-tech">HTML5 Canvas • Minimax AI • Renju Rules Engine</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>AI is thinking...</p>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

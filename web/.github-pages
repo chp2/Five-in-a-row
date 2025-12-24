@@ -1,0 +1,21 @@
+# Omok-Lab Web Deployment
+
+This file is automatically deployed to GitHub Pages.
+
+## Deployment Steps
+
+1. Push this repository to GitHub
+2. Go to Settings → Pages
+3. Select source: Deploy from a branch
+4. Branch: main, Folder: /web
+5. Save
+
+Your site will be live at:
+https://[your-username].github.io/Five-in-a-row/
+
+## Custom Domain (Optional)
+
+To use a custom domain:
+1. Add your domain in this CNAME file
+2. Configure DNS at your domain registrar
+3. Enable HTTPS in GitHub Pages settings
