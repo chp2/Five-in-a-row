@@ -920,6 +920,36 @@ class GameController {
 
         // Update forbidden positions
         this.renderer.updateForbiddenPositions();
+
+        // Update AI analysis
+        this.updateAIAnalysis();
+    }
+
+    updateAIAnalysis() {
+        // Only update if there are moves on the board
+        if (this.board.moveHistory.length === 0) {
+            document.getElementById('positionScore').textContent = '0';
+            return;
+        }
+
+        // Create evaluator to get current position score
+        const evaluator = new PositionEvaluator(this.board);
+
+        // Evaluate from current player's perspective
+        const score = evaluator.evaluate(this.board.currentPlayer);
+
+        // Update position score
+        document.getElementById('positionScore').textContent = score;
+
+        // Add visual indicator based on score
+        const scoreEl = document.getElementById('positionScore');
+        if (score > 1000) {
+            scoreEl.style.color = '#10b981'; // Green for good position
+        } else if (score < -1000) {
+            scoreEl.style.color = '#ef4444'; // Red for bad position
+        } else {
+            scoreEl.style.color = '#6366f1'; // Blue for neutral
+        }
     }
 
     updateMoveHistory() {
