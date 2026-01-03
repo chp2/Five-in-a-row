@@ -324,7 +324,14 @@ class PositionEvaluator {
                 const stone = this.board.grid[row][col];
                 if (stone !== Stone.EMPTY) {
                     const stoneScore = this.evaluatePosition(row, col, stone);
-                    score += stone === perspective ? stoneScore : -stoneScore;
+
+                    if (stone === perspective) {
+                        // My stones - offensive value
+                        score += stoneScore;
+                    } else {
+                        // Opponent stones - defensive value (weighted higher!)
+                        score -= stoneScore * 1.5;  // 50% more weight on defense!
+                    }
                 }
             }
         }
@@ -338,10 +345,11 @@ class PositionEvaluator {
         for (const direction of DIRECTIONS) {
             const count = this.board.countConsecutive(row, col, stone, direction);
 
-            if (count === 5) score += 100000;
-            else if (count === 4) score += 10000;
-            else if (count === 3) score += 1000;
-            else if (count === 2) score += 100;
+            // Higher scores for longer sequences
+            if (count === 5) score += 100000;      // Win
+            else if (count === 4) score += 50000;  // Critical (increased from 10000)
+            else if (count === 3) score += 5000;   // Strong (increased from 1000)
+            else if (count === 2) score += 500;    // Good (increased from 100)
             else score += 10;
         }
 
@@ -371,6 +379,13 @@ class MinimaxAI {
     getBestMove(stone) {
         this.nodesEvaluated = 0;
         this.startTime = Date.now();
+
+        // CRITICAL DEFENSE: Check if opponent has 4-in-a-row that needs immediate blocking
+        const opponentStone = stone === Stone.BLACK ? Stone.WHITE : Stone.BLACK;
+        const criticalDefense = this.findCriticalDefense(opponentStone);
+        if (criticalDefense) {
+            return { row: criticalDefense.row, col: criticalDefense.col, score: 999999 };
+        }
 
         let bestMove = null;
         let bestScore = -Infinity;
@@ -405,6 +420,35 @@ class MinimaxAI {
         }
 
         return bestMove;
+    }
+
+    findCriticalDefense(opponentStone) {
+        // Check all empty positions near opponent stones
+        for (let row = 0; row < BOARD_SIZE; row++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                if (this.board.isEmpty(row, col)) {
+                    // Temporarily place opponent stone to check if it creates 4-in-a-row
+                    this.board.grid[row][col] = opponentStone;
+
+                    let has4InRow = false;
+                    for (const direction of DIRECTIONS) {
+                        const count = this.board.countConsecutive(row, col, opponentStone, direction);
+                        if (count >= 4) {
+                            has4InRow = true;
+                            break;
+                        }
+                    }
+
+                    this.board.grid[row][col] = Stone.EMPTY;
+
+                    if (has4InRow) {
+                        // This position must be defended!
+                        return { row, col };
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     minimax(depth, alpha, beta, isMaximizing, perspective) {

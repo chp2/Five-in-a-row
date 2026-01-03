@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 테스트 - Omok-Lab</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e1a;
+            color: #f9fafb;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #6366f1;
+            margin-bottom: 2rem;
+        }
+
+        .test-case {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-case h2 {
+            color: #8b5cf6;
+            margin-top: 0;
+        }
+
+        .board {
+            display: inline-grid;
+            grid-template-columns: repeat(5, 40px);
+            gap: 2px;
+            background: #d4a574;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: #c49563;
+            border: 1px solid #8b6f47;
+        }
+
+        .result {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .result.pass {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+
+        .result.fail {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .result.pending {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid #fbbf24;
+            color: #fbbf24;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .details {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        .summary {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid #6366f1;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary h2 {
+            margin-top: 0;
+            color: #6366f1;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 AI 대각선 방어 테스트</h1>
+
+    <div class="summary" id="summary">
+        <h2>테스트 요약</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="totalTests">0</div>
+                <div class="stat-label">총 테스트</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="color: #10b981;" id="passedTests">0</div>
+                <div class="stat-label">통과</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="color: #ef4444;" id="failedTests">0</div>
+                <div class="stat-label">실패</div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="runAllTests()">🚀 모든 테스트 실행</button>
+
+    <div id="testResults"></div>
+
+    <script src="game.js"></script>
+    <script>
+        const testCases = [
+            {
+                name: "테스트 1: 대각선 3목 방어",
+                description: "흑돌이 대각선으로 3목을 만들었을 때 AI가 방어해야 함",
+                setup: [
+                    { row: 1, col: 1, stone: 1 }, // Black
+                    { row: 2, col: 2, stone: 1 }, // Black
+                    { row: 3, col: 3, stone: 1 }, // Black
+                ],
+                currentPlayer: 2, // White (AI)
+                expectedPositions: [
+                    { row: 0, col: 0 }, // 위쪽 방어
+                    { row: 4, col: 4 }, // 아래쪽 방어
+                ],
+                boardSize: 5
+            },
+            {
+                name: "테스트 2: 대각선 4목 긴급 방어",
+                description: "흑돌이 대각선으로 4목을 만들었을 때 AI가 즉시 방어해야 함",
+                setup: [
+                    { row: 0, col: 0, stone: 1 }, // Black
+                    { row: 1, col: 1, stone: 1 }, // Black
+                    { row: 2, col: 2, stone: 1 }, // Black
+                    { row: 3, col: 3, stone: 1 }, // Black
+                ],
+                currentPlayer: 2, // White (AI)
+                expectedPositions: [
+                    { row: 4, col: 4 }, // 유일한 방어 위치
+                ],
+                boardSize: 5,
+                critical: true
+            },
+            {
+                name: "테스트 3: 역대각선 방어",
+                description: "흑돌이 역대각선으로 3목을 만들었을 때 AI가 방어해야 함",
+                setup: [
+                    { row: 0, col: 4, stone: 1 }, // Black
+                    { row: 1, col: 3, stone: 1 }, // Black
+                    { row: 2, col: 2, stone: 1 }, // Black
+                ],
+                currentPlayer: 2, // White (AI)
+                expectedPositions: [
+                    { row: 3, col: 1 }, // 아래 방어
+                    { row: 4, col: 0 }, // 맨 아래 방어
+                ],
+                boardSize: 5
+            }
+        ];
+
+        function renderBoard(setup, boardSize = 5) {
+            const grid = Array(boardSize).fill(null).map(() => Array(boardSize).fill(0));
+            setup.forEach(({ row, col, stone }) => {
+                grid[row][col] = stone;
+            });
+
+            let html = '<div class="board">';
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    const stone = grid[row][col];
+                    let content = '·';
+                    if (stone === 1) content = '⚫';
+                    if (stone === 2) content = '⚪';
+                    html += `<div class="cell">${content}</div>`;
+                }
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function runTest(testCase, index) {
+            const board = new Board();
+
+            // 작은 보드로 테스트하기 위해 임시로 크기 조정
+            const originalSize = BOARD_SIZE;
+
+            // Setup board
+            testCase.setup.forEach(({ row, col, stone }) => {
+                board.grid[row][col] = stone;
+                board.moveHistory.push({ row, col, stone, moveNumber: board.moveHistory.length + 1 });
+            });
+            board.currentPlayer = testCase.currentPlayer;
+
+            // Run AI
+            const ai = new MinimaxAI(board, 3); // Depth 3
+            const startTime = Date.now();
+            const bestMove = ai.getBestMove(testCase.currentPlayer);
+            const calcTime = Date.now() - startTime;
+
+            // Check result
+            let passed = false;
+            let resultMessage = '';
+
+            if (bestMove) {
+                const isExpected = testCase.expectedPositions.some(
+                    pos => pos.row === bestMove.row && pos.col === bestMove.col
+                );
+
+                if (isExpected) {
+                    passed = true;
+                    resultMessage = `✅ 통과! AI가 (${bestMove.row}, ${bestMove.col})에 방어했습니다.`;
+                } else {
+                    resultMessage = `❌ 실패! AI가 (${bestMove.row}, ${bestMove.col})에 놓았습니다. 예상 위치: ${testCase.expectedPositions.map(p => `(${p.row}, ${p.col})`).join(' 또는 ')}`;
+                }
+            } else {
+                resultMessage = '❌ 실패! AI가 수를 찾지 못했습니다.';
+            }
+
+            return {
+                passed,
+                resultMessage,
+                bestMove,
+                calcTime,
+                nodesEvaluated: ai.nodesEvaluated
+            };
+        }
+
+        function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '';
+
+            let totalPassed = 0;
+            let totalFailed = 0;
+
+            testCases.forEach((testCase, index) => {
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test-case';
+
+                const result = runTest(testCase, index);
+
+                testDiv.innerHTML = `
+                    <h2>${testCase.name}</h2>
+                    <p>${testCase.description}</p>
+                    ${renderBoard(testCase.setup, testCase.boardSize)}
+                    <div class="result ${result.passed ? 'pass' : 'fail'}">
+                        ${result.resultMessage}
+                    </div>
+                    <div class="details">
+                        <strong>계산 시간:</strong> ${result.calcTime}ms<br>
+                        <strong>노드 평가 수:</strong> ${result.nodesEvaluated}<br>
+                        ${result.bestMove ? `<strong>AI 추천 위치:</strong> (${result.bestMove.row}, ${result.bestMove.col})<br><strong>점수:</strong> ${result.bestMove.score}` : ''}
+                    </div>
+                `;
+
+                resultsDiv.appendChild(testDiv);
+
+                if (result.passed) totalPassed++;
+                else totalFailed++;
+            });
+
+            // Update summary
+            document.getElementById('totalTests').textContent = testCases.length;
+            document.getElementById('passedTests').textContent = totalPassed;
+            document.getElementById('failedTests').textContent = totalFailed;
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+
+</html>
