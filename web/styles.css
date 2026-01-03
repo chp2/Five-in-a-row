@@ -384,8 +384,49 @@ body::before {
     cursor: pointer;
 }
 
+.select-input {
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
 
-<parameter name="StartLine">380
+.select-input:hover {
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.select-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Dropdown options - force visibility */
+.select-input option {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.select-input option:hover {
+    background-color: #e0e0e0 !important;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent-primary);
+}
+
+
 /* ==========================================
    GAME BOARD
    ========================================== */
