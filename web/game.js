@@ -330,7 +330,7 @@ class PositionEvaluator {
                         score += stoneScore;
                     } else {
                         // Opponent stones - defensive value (weighted higher!)
-                        score -= stoneScore * 1.5;  // 50% more weight on defense!
+                        score -= stoneScore * 2.0;  // 2x weight on defense!
                     }
                 }
             }
@@ -423,32 +423,78 @@ class MinimaxAI {
     }
 
     findCriticalDefense(opponentStone) {
-        // Check all empty positions near opponent stones
+        let criticalThreats = [];
+
+        // Check all empty positions
         for (let row = 0; row < BOARD_SIZE; row++) {
             for (let col = 0; col < BOARD_SIZE; col++) {
                 if (this.board.isEmpty(row, col)) {
-                    // Temporarily place opponent stone to check if it creates 4-in-a-row
+                    // Temporarily place opponent stone
                     this.board.grid[row][col] = opponentStone;
 
-                    let has4InRow = false;
                     for (const direction of DIRECTIONS) {
                         const count = this.board.countConsecutive(row, col, opponentStone, direction);
+
+                        // 4-in-a-row or more - CRITICAL!
                         if (count >= 4) {
-                            has4InRow = true;
-                            break;
+                            this.board.grid[row][col] = Stone.EMPTY;
+                            return { row, col, priority: 1 };  // Immediate return for 4+
+                        }
+
+                        // 3-in-a-row with open ends - HIGH priority
+                        if (count === 3) {
+                            if (this.isOpenThree(row, col, opponentStone, direction)) {
+                                criticalThreats.push({ row, col, priority: 2, count: 3 });
+                            }
                         }
                     }
 
                     this.board.grid[row][col] = Stone.EMPTY;
-
-                    if (has4InRow) {
-                        // This position must be defended!
-                        return { row, col };
-                    }
                 }
             }
         }
+
+        // Return highest priority threat
+        if (criticalThreats.length > 0) {
+            criticalThreats.sort((a, b) => a.priority - b.priority);
+            return criticalThreats[0];
+        }
+
         return null;
+    }
+
+    isOpenThree(row, col, stone, direction) {
+        const [dr, dc] = direction;
+
+        // Check both ends of the 3-in-a-row
+        // We need to find where the sequence starts and ends
+        let startR = row;
+        let startC = col;
+        let endR = row;
+        let endC = col;
+
+        // Find start of sequence (going backwards)
+        while (this.board.isValidPosition(startR - dr, startC - dc) &&
+            this.board.grid[startR - dr][startC - dc] === stone) {
+            startR -= dr;
+            startC -= dc;
+        }
+
+        // Find end of sequence (going forwards)
+        while (this.board.isValidPosition(endR + dr, endC + dc) &&
+            this.board.grid[endR + dr][endC + dc] === stone) {
+            endR += dr;
+            endC += dc;
+        }
+
+        // Check if both ends are empty (open three)
+        const leftEmpty = this.board.isValidPosition(startR - dr, startC - dc) &&
+            this.board.grid[startR - dr][startC - dc] === Stone.EMPTY;
+        const rightEmpty = this.board.isValidPosition(endR + dr, endC + dc) &&
+            this.board.grid[endR + dr][endC + dc] === Stone.EMPTY;
+
+        // Open three if both ends are empty
+        return leftEmpty && rightEmpty;
     }
 
     minimax(depth, alpha, beta, isMaximizing, perspective) {
