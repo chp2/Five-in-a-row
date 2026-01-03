@@ -9,19 +9,19 @@
     --bg-secondary: #111827;
     --bg-tertiary: #1a1f35;
     --bg-glass: rgba(17, 24, 39, 0.7);
-    
+
     /* Accent Colors */
     --accent-primary: #6366f1;
     --accent-secondary: #8b5cf6;
     --accent-success: #10b981;
     --accent-warning: #f59e0b;
     --accent-danger: #ef4444;
-    
+
     /* Text Colors */
     --text-primary: #f9fafb;
     --text-secondary: #d1d5db;
     --text-muted: #9ca3af;
-    
+
     /* Board Colors */
     --board-bg: #d4a574;
     --board-line: #8b6f47;
@@ -29,26 +29,26 @@
     --stone-black: #1a1a1a;
     --stone-white: #f5f5f5;
     --stone-shadow: rgba(0, 0, 0, 0.3);
-    
+
     /* Effects */
     --glow-primary: 0 0 20px rgba(99, 102, 241, 0.5);
     --glow-secondary: 0 0 15px rgba(139, 92, 246, 0.4);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-    
+
     /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 0.75rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    
+
     /* Border Radius */
     --radius-sm: 0.5rem;
     --radius-md: 0.75rem;
     --radius-lg: 1rem;
-    
+
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-normal: 250ms ease;
@@ -82,7 +82,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
+    background:
         radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
     pointer-events: none;
@@ -131,8 +131,15 @@ body::before {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .logo h1 {
@@ -171,15 +178,15 @@ body::before {
     .main-content {
         grid-template-columns: 1fr;
     }
-    
+
     .sidebar-left {
         order: 2;
     }
-    
+
     .board-container {
         order: 1;
     }
-    
+
     .sidebar-right {
         order: 3;
     }
@@ -400,6 +407,13 @@ body::before {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
+/* Dropdown options styling */
+.select-input option {
+    background: #ffffff;
+    color: #000000;
+    padding: 8px;
+}
+
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -562,8 +576,15 @@ input[type="checkbox"] {
 }
 
 @keyframes glow {
-    0%, 100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
-    50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+    }
 }
 
 /* ==========================================
@@ -657,7 +678,9 @@ input[type="checkbox"] {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-overlay p {
@@ -674,19 +697,19 @@ input[type="checkbox"] {
     .app-container {
         padding: var(--spacing-sm);
     }
-    
+
     .header {
         padding: var(--spacing-md);
     }
-    
+
     .logo h1 {
         font-size: 1.75rem;
     }
-    
+
     .board-wrapper {
         padding: var(--spacing-md);
     }
-    
+
     #gameBoard {
         width: 100%;
         height: auto;
@@ -702,6 +725,7 @@ input[type="checkbox"] {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -713,9 +737,26 @@ input[type="checkbox"] {
 }
 
 /* Stagger animation for panels */
-.sidebar-left .panel:nth-child(1) { animation-delay: 0.1s; }
-.sidebar-left .panel:nth-child(2) { animation-delay: 0.2s; }
-.sidebar-left .panel:nth-child(3) { animation-delay: 0.3s; }
-.sidebar-right .panel:nth-child(1) { animation-delay: 0.1s; }
-.sidebar-right .panel:nth-child(2) { animation-delay: 0.2s; }
-.sidebar-right .panel:nth-child(3) { animation-delay: 0.3s; }
+.sidebar-left .panel:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.sidebar-left .panel:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.sidebar-left .panel:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.sidebar-right .panel:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.sidebar-right .panel:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.sidebar-right .panel:nth-child(3) {
+    animation-delay: 0.3s;
+}
