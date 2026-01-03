@@ -396,7 +396,7 @@ python main.py
 **프로젝트 링크**:
 - 🌐 웹 버전: https://chp2.github.io/Five-in-a-row/
 - 💻 GitHub: https://github.com/chp2/Five-in-a-row
-- 📧 Contact: [Your Email]
+- 📧 Contact: chp2@illinois.edu
 
 **주요 기술**:
 - Python, PyQt6, NumPy
