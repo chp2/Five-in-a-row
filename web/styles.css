@@ -384,43 +384,8 @@ body::before {
     cursor: pointer;
 }
 
-.select-input {
-    padding: var(--spacing-sm);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-sm);
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
 
-.select-input:hover {
-    border-color: var(--accent-primary);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.select-input:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-/* Dropdown options styling */
-.select-input option {
-    background: #ffffff;
-    color: #000000;
-    padding: 8px;
-}
-
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--accent-primary);
-}
-
+<parameter name="StartLine">380
 /* ==========================================
    GAME BOARD
    ========================================== */
